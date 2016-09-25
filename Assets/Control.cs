@@ -9,6 +9,8 @@ public class Control : MonoBehaviour {
     public Text Score;
     public Text Gameover;
     public bool gameover = false;
+    public AudioSource launch;
+    public AudioSource hit;
 	void Start () {
         rb = GetComponent<Rigidbody>();
 	}
@@ -21,6 +23,7 @@ public class Control : MonoBehaviour {
                       ) < 1.2 && Input.GetKeyDown("space"))
         {
             rb.AddForce(new Vector3(0.0f, 2000, 0.0f));
+            launch.Play();
         }
 
         float moveHorizontal = Input.GetAxis("Horizontal");
@@ -29,7 +32,13 @@ public class Control : MonoBehaviour {
 
         rb.AddForce(movement * speed);
 	}
-
+    void OnCollisionEnter(Collision Other)
+    {
+        if (Other.collider.name != "WallSilent" && Other.collider.name != "launcher" && Other.collider.name != "Plane")
+        {
+            hit.Play();
+        }
+    }
     IEnumerator OnCollisionStay(Collision Other)
     {
         if (Other.collider.name != "Wall")
